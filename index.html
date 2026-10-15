@@ -94,11 +94,8 @@ body{
 .sub .sc{color:var(--muted);font-size:12px;margin-top:2px;line-height:1.45}
 .sub .pts{font-weight:900;color:var(--ink);white-space:nowrap}
 .tip{margin-top:16px;padding:12px 14px;border-radius:14px;background:#fff;border:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.6}
-.poster{margin-top:8px;border:1px dashed var(--line);border-radius:16px;background:#f3f6f4;min-height:180px;padding:18px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
-.poster .ph-code{font-family:ui-monospace,Consolas,monospace;font-weight:900;font-size:1.45rem;letter-spacing:.12em;color:var(--ink)}
-.poster .ph-name{font-weight:900;font-size:1.05rem;color:var(--ink)}
-.poster .ph-score{font-size:13px;color:var(--muted)}
-.poster .ph-hint{margin-top:8px;font-size:12px;color:#6b7280;max-width:18em;line-height:1.5}
+.poster-wrap{margin-top:8px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#eef6f0;box-shadow:0 10px 28px rgba(17,17,17,.06)}
+#posterCanvas{display:block;width:100%;height:auto;vertical-align:top}
 .legal{display:none;margin-top:16px}
 .legal h3{font-size:15px;margin-bottom:8px}
 .legal p{font-size:13px;color:var(--muted);line-height:1.7}
@@ -157,13 +154,10 @@ body{
       <div id="bars"></div>
       <div class="tip">本测试仅供娱乐，请勿当成医学、健身评估或人生判决书。</div>
       <div class="section">结果图</div>
-      <div class="poster">
-        <div class="ph-code" id="phCode">BOSS</div>
-        <div class="ph-name" id="phName">又厚又会说</div>
-        <div class="ph-score" id="phScore">薄肌指数 60</div>
-        <div class="ph-hint">正式分享图之后会补上，现在可以先截图保存。</div>
+      <div class="poster-wrap">
+        <canvas id="posterCanvas" width="750" height="1334" aria-label="结果海报"></canvas>
       </div>
-      <button class="btn dark" id="savePoster" type="button">查看并保存结果图（即将上线）</button>
+      <button class="btn dark" id="savePoster" type="button">保存结果图</button>
       <button class="btn ghost" id="again" type="button">再测一次</button>
     </div>
   </section>
@@ -285,9 +279,154 @@ function finish(){
     }).join("");
     return `<div class="dim-block"><div class="dim-head"><span class="n">${d.name}</span><span class="lv">${LEVELS[lv]}</span></div><div class="track"><span style="width:${w}%"></span></div><div class="dim-comment">${d.levels[LEVELS[lv]]}</div>${subs}</div>`;
   }).join("");
-  $("phCode").textContent=t.code; $("phName").textContent=t.name; $("phScore").textContent=`薄肌指数 ${score} · ${key}`;
+  window.__posterState={type:t,key,score,dimLevels,subPts};
   show("result");
+  drawPoster(window.__posterState);
 }
+
+const TYPE_ART = {
+  MILD:"assets/types/MILD.jpg", YEET:"assets/types/YEET.jpg", COPE:"assets/types/COPE.jpg", JIAN:"assets/types/JIAN.jpg",
+  PROMPT:"assets/types/PROMPT.jpg", AGENT:"assets/types/AGENT.jpg", SUN:"assets/types/SUN.jpg", SUNK:"assets/types/SUNK.jpg",
+  SOLID:"assets/types/SOLID.jpg", GYMBO:"assets/types/GYMBO.jpg", ZEN:"assets/types/ZEN.jpg", BOSS:"assets/types/BOSS.jpg",
+  CYBER:"assets/types/CYBER.jpg", MECHA:"assets/types/MECHA.jpg", ORCL:"assets/types/ORCL.jpg", FULL:"assets/types/FULL.jpg"
+};
+const artCache = {};
+function loadArt(code){
+  const src = TYPE_ART[code];
+  if(!src) return Promise.resolve(null);
+  if(artCache[code]) return artCache[code];
+  artCache[code] = new Promise(resolve=>{
+    const img = new Image();
+    img.onload=()=>resolve(img);
+    img.onerror=()=>resolve(null);
+    img.src = src + "?v=1";
+  });
+  return artCache[code];
+}
+function roundRect(ctx,x,y,w,h,r){
+  const rr=Math.min(r,w/2,h/2);
+  ctx.beginPath();
+  ctx.moveTo(x+rr,y);
+  ctx.arcTo(x+w,y,x+w,y+h,rr);
+  ctx.arcTo(x+w,y+h,x,y+h,rr);
+  ctx.arcTo(x,y+h,x,y,rr);
+  ctx.arcTo(x,y,x+w,y,rr);
+  ctx.closePath();
+}
+function wrapText(ctx, text, maxW){
+  const chars = String(text||"").split("");
+  const lines=[]; let line="";
+  for(const ch of chars){
+    const t=line+ch;
+    if(ctx.measureText(t).width>maxW && line){ lines.push(line); line=ch; }
+    else line=t;
+  }
+  if(line) lines.push(line);
+  return lines;
+}
+async function drawPoster(state){
+  if(!state) return;
+  const canvas=$("posterCanvas");
+  const ctx=canvas.getContext("2d");
+  const W=canvas.width, H=canvas.height;
+  const {type:t, key, score, dimLevels} = state;
+  const art = await loadArt(t.code);
+
+  // bg
+  const g=ctx.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,"#ecfdf5"); g.addColorStop(0.45,"#f0fdf4"); g.addColorStop(1,"#dcfce7");
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  // soft blobs
+  ctx.fillStyle="rgba(134,239,172,0.35)";
+  ctx.beginPath(); ctx.arc(120,160,160,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(640,220,190,0,Math.PI*2); ctx.fill();
+
+  // card
+  ctx.fillStyle="#ffffff";
+  roundRect(ctx,40,70,W-80,H-160,36);
+  ctx.fill();
+  ctx.strokeStyle="rgba(22,163,74,0.12)";
+  ctx.lineWidth=2;
+  roundRect(ctx,40,70,W-80,H-160,36);
+  ctx.stroke();
+
+  // brand
+  ctx.fillStyle="#111111";
+  ctx.font="700 28px PingFang SC, Microsoft YaHei, sans-serif";
+  ctx.textAlign="center";
+  ctx.fillText("薄肌打分器", W/2, 120);
+
+  // art circle
+  const cx=W/2, cy=340, R=150;
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.closePath();
+  ctx.clip();
+  if(art){
+    // cover
+    const s=Math.max((R*2)/art.width,(R*2)/art.height);
+    const dw=art.width*s, dh=art.height*s;
+    ctx.drawImage(art, cx-dw/2, cy-dh/2, dw, dh);
+  }else{
+    const gg=ctx.createLinearGradient(cx-R,cy-R,cx+R,cy+R);
+    gg.addColorStop(0,"#bbf7d0"); gg.addColorStop(1,"#16a34a");
+    ctx.fillStyle=gg; ctx.fillRect(cx-R,cy-R,R*2,R*2);
+    ctx.fillStyle="#fff";
+    ctx.font="900 64px ui-monospace, Consolas, monospace";
+    ctx.fillText((t.code||"?").slice(0,4), cx, cy+22);
+  }
+  ctx.restore();
+  ctx.strokeStyle="#86efac"; ctx.lineWidth=8;
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.stroke();
+
+  // code
+  ctx.fillStyle="#111";
+  ctx.font="900 72px ui-monospace, Consolas, monospace";
+  ctx.letterSpacing="0.12em";
+  ctx.fillText(t.code||"", W/2, 560);
+  // name
+  ctx.font="900 48px PingFang SC, Microsoft YaHei, sans-serif";
+  ctx.fillText(t.name||"", W/2, 620);
+  // score
+  ctx.fillStyle="#15803d";
+  ctx.font="800 32px PingFang SC, Microsoft YaHei, sans-serif";
+  ctx.fillText(`薄肌指数 ${score} · ${key}`, W/2, 670);
+  // one-liner
+  ctx.fillStyle="#374151";
+  ctx.font="600 30px PingFang SC, Microsoft YaHei, sans-serif";
+  const ones = wrapText(ctx, t.one||"", W-160);
+  let oy=720;
+  ones.slice(0,3).forEach(line=>{ ctx.fillText(line, W/2, oy); oy+=40; });
+
+  // dims
+  let y = Math.max(oy+30, 820);
+  ctx.textAlign="left";
+  DATA.dims.forEach(d=>{
+    const lv = dimLevels[d.id];
+    const w = [0.2,0.4,0.6,0.8,1][lv];
+    ctx.fillStyle="#111";
+    ctx.font="800 26px PingFang SC, Microsoft YaHei, sans-serif";
+    ctx.fillText(d.name, 90, y);
+    ctx.fillStyle="#6b7280";
+    ctx.font="700 24px PingFang SC, Microsoft YaHei, sans-serif";
+    ctx.textAlign="right";
+    ctx.fillText(LEVELS[lv], W-90, y);
+    ctx.textAlign="left";
+    y+=18;
+    // track
+    ctx.fillStyle="#e8f5ec";
+    roundRect(ctx,90,y,W-180,18,9); ctx.fill();
+    ctx.fillStyle="#16a34a";
+    roundRect(ctx,90,y,(W-180)*w,18,9); ctx.fill();
+    y+=48;
+  });
+
+  // footer
+  ctx.textAlign="center";
+  ctx.fillStyle="#9ca3af";
+  ctx.font="600 22px PingFang SC, Microsoft YaHei, sans-serif";
+  ctx.fillText("仅供娱乐 · thinmuscle.pages.dev", W/2, H-50);
+}
+
 $("start").onclick=()=>{ resetAnswers(); show("quiz"); renderQ(); };
 $("again").onclick=()=>$("start").onclick();
 $("prevQ").onclick=()=>{ if(i>0){ i--; renderQ(); } };
@@ -297,8 +436,17 @@ $("nextQ").onclick=()=>{
   else { i++; renderQ(); }
 };
 $("savePoster").onclick=()=>{
-  $("savePoster").textContent="海报稍后补上，先截图吧";
-  setTimeout(()=>$("savePoster").textContent="查看并保存结果图（即将上线）",2000);
+  const c=$("posterCanvas");
+  if(!c) return;
+  c.toBlob(blob=>{
+    if(!blob){ alert("保存失败，试试长按图片或换个浏览器"); return; }
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    const code=(window.__posterState&&window.__posterState.type&&window.__posterState.type.code)||"thinmuscle";
+    a.download=`薄肌打分器-${code}.jpg`;
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+  }, "image/png");
 };
 $("linkPrivacy").onclick=e=>{e.preventDefault(); show("page-privacy");};
 $("linkTerms").onclick=e=>{e.preventDefault(); show("page-terms");};
