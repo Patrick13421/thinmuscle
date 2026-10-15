@@ -3,79 +3,102 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<meta name="description" content="薄肌打分器：测薄肌指数，四维打分，搞怪 16 型。约 1 分钟，不用登录。"/>
+<meta name="description" content="薄肌打分器：测薄肌指数与搞怪类型。约 1 分钟，不用登录。"/>
 <title>薄肌打分器</title>
 <style>
 :root{
-  --g:#16a34a;--g2:#22c55e;--g3:#86efac;
-  --bg:#f3faf4;--ink:#14532d;--card:#fff;
-  --muted:#4d7c5a;--line:#c6ebd0;--soft:#e8f8ec;
+  --g:#15803d;--g2:#16a34a;--g3:#86efac;
+  --bg:#f4faf5;--ink:#14532d;--card:#fff;
+  --muted:#4d7c5a;--line:#cfead7;--soft:#eaf7ee;--warn:#b45309;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
   font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
-  background:radial-gradient(900px 480px at 10% -10%,#dcfce7,transparent 55%),var(--bg);
+  background:radial-gradient(900px 420px at 8% -8%,#dcfce7,transparent 50%),var(--bg);
   color:var(--ink);min-height:100vh;line-height:1.55;-webkit-tap-highlight-color:transparent;
 }
-.wrap{max-width:440px;margin:0 auto;padding:28px 18px 80px}
-.brand{font-weight:900;color:var(--g);letter-spacing:.06em;font-size:14px}
-.meta{margin-top:6px;font-size:13px;color:var(--muted)}
-h1{font-size:clamp(1.55rem,5.5vw,1.9rem);margin:18px 0 10px;line-height:1.25;letter-spacing:-.02em}
-.lead{color:var(--muted);font-size:15px;margin-bottom:20px}
+.wrap{max-width:460px;margin:0 auto;padding:26px 16px 88px}
+.brand{font-weight:900;color:var(--g2);letter-spacing:.06em;font-size:14px}
+.meta{margin-top:8px;font-size:13px;color:var(--muted)}
+h1{font-size:clamp(1.55rem,5.2vw,1.85rem);margin:16px 0 10px;line-height:1.28;letter-spacing:-.02em}
+.lead{color:var(--muted);font-size:15px;margin-bottom:14px}
 .btn{
-  width:100%;padding:15px 18px;border:0;border-radius:999px;
-  background:linear-gradient(90deg,#16a34a,#22c55e);color:#fff;
+  width:100%;padding:14px 16px;border:0;border-radius:999px;
+  background:linear-gradient(90deg,#15803d,#22c55e);color:#fff;
   font-weight:800;font-size:16px;cursor:pointer;
-  box-shadow:0 10px 24px rgba(22,163,74,.22);
+  box-shadow:0 10px 22px rgba(22,163,74,.2);
 }
-.btn:active{transform:scale(.98)}
+.btn:active{transform:scale(.985)}
 .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:none;margin-top:10px}
+.btn.dark{background:#14532d;box-shadow:none;margin-top:10px}
 .card{
-  background:var(--card);border:1px solid var(--line);border-radius:20px;
-  padding:20px 18px;box-shadow:0 10px 28px rgba(20,83,45,.06);
+  background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:18px 16px;box-shadow:0 10px 28px rgba(20,83,45,.05);
 }
 .hidden{display:none!important}
-.bar{height:6px;background:var(--soft);border-radius:99px;overflow:hidden;margin-bottom:16px}
-.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--g3),var(--g));transition:.2s}
-.qno{font-size:12px;color:var(--g);font-weight:700;margin-bottom:8px}
-.q{font-size:1.2rem;font-weight:800;margin-bottom:14px;line-height:1.4}
+.bar{height:6px;background:var(--soft);border-radius:99px;overflow:hidden;margin-bottom:14px}
+.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--g3),var(--g2));transition:.2s}
+.qno{font-size:12px;color:var(--g2);font-weight:700;margin-bottom:8px}
+.q{font-size:1.18rem;font-weight:800;margin-bottom:12px;line-height:1.4}
 .opt{
-  width:100%;text-align:left;margin:8px 0;padding:14px 16px;
+  width:100%;display:flex;align-items:flex-start;gap:10px;
+  text-align:left;margin:8px 0;padding:13px 14px;
   border-radius:14px;border:1px solid var(--line);background:#fbfffc;
   cursor:pointer;font-size:15px;color:var(--ink);line-height:1.4;
 }
+.opt .abc{
+  flex:0 0 26px;width:26px;height:26px;border-radius:8px;
+  background:var(--soft);color:var(--g);font-weight:900;font-size:13px;
+  display:flex;align-items:center;justify-content:center;margin-top:1px;
+}
+.opt .txt{flex:1}
 .opt:hover,.opt:focus{border-color:var(--g2);outline:none;background:#f0fdf4}
-.hero-type{text-align:center;padding:8px 0 4px}
-.code-big{
-  display:inline-block;font-family:ui-monospace,Consolas,monospace;
-  letter-spacing:.18em;color:var(--g);font-weight:900;font-size:1.65rem;
-}
-.name-big{font-size:1.45rem;font-weight:900;margin:8px 0 6px}
-.hook{color:var(--muted);font-size:15px;margin:0 auto;max-width:28em}
-.score-pill{
-  display:inline-flex;align-items:center;gap:6px;margin-top:14px;
-  padding:6px 12px;border-radius:999px;background:var(--soft);
-  color:var(--muted);font-size:13px;font-weight:700;
-}
-.score-pill b{color:var(--g);font-size:16px}
-.section-label{font-size:12px;font-weight:800;color:var(--g);margin:22px 0 10px;letter-spacing:.04em}
-.row{margin:0 0 12px}
-.lab{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:5px;font-weight:600}
-.lab span:first-child{color:var(--ink)}
-.track{height:9px;background:var(--soft);border-radius:99px;overflow:hidden}
-.track>span{display:block;height:100%;background:linear-gradient(90deg,#86efac,#16a34a);border-radius:99px}
-.note{margin-top:7px;padding:10px 12px;background:var(--soft);border-radius:12px;font-size:13px;color:var(--ink)}
-.foot{margin-top:28px;text-align:center;font-size:12px;color:#7aa388;line-height:1.6}
-.dims{display:flex;flex-direction:column;gap:8px;margin:4px 0 18px}
+.dims{display:flex;flex-direction:column;gap:8px;margin:12px 0 18px}
 .dim{
-  display:flex;align-items:flex-start;gap:10px;
   background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;
 }
-.dim .ico{font-size:18px;line-height:1.2;flex:0 0 auto}
-.dim b{display:block;font-size:14px;color:var(--g);margin-bottom:2px}
+.dim b{display:block;font-size:14px;color:var(--g2);margin-bottom:2px}
 .dim span{font-size:12px;color:var(--muted);line-height:1.45}
+.hero{text-align:center;padding:6px 0 2px}
+.badge-hide{
+  display:inline-block;margin-bottom:10px;padding:5px 10px;border-radius:999px;
+  background:#fff7ed;color:var(--warn);border:1px solid #fed7aa;font-size:12px;font-weight:800;
+}
+.code-big{
+  font-family:ui-monospace,Consolas,monospace;letter-spacing:.16em;
+  color:var(--g2);font-weight:900;font-size:1.7rem;
+}
+.name-big{font-size:1.35rem;font-weight:900;margin:8px 0 6px}
+.subline{color:var(--muted);font-size:14px}
+.section{font-size:13px;font-weight:900;color:var(--g2);margin:22px 0 10px;letter-spacing:.02em}
+.essay{
+  font-size:14px;color:var(--ink);line-height:1.7;
+  padding:12px 14px;background:var(--soft);border-radius:14px;
+}
+.row{margin:0 0 12px;padding-bottom:12px;border-bottom:1px dashed var(--line)}
+.row:last-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
+.lab{display:flex;justify-content:space-between;gap:10px;font-size:13px;margin-bottom:6px;font-weight:700}
+.lab .lv{color:var(--muted);font-weight:700;white-space:nowrap}
+.track{height:8px;background:var(--soft);border-radius:99px;overflow:hidden}
+.track>span{display:block;height:100%;background:linear-gradient(90deg,#86efac,#16a34a);border-radius:99px}
+.note{margin-top:7px;font-size:13px;color:var(--ink);line-height:1.55}
+.tip{
+  margin-top:16px;padding:12px 14px;border-radius:14px;background:#fff;
+  border:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.6;
+}
+.poster{
+  margin-top:8px;border:1px dashed var(--line);border-radius:16px;
+  background:linear-gradient(160deg,#f0fdf4,#fff 45%,#ecfdf5);
+  min-height:220px;padding:18px 16px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+}
+.poster .ph-code{font-family:ui-monospace,Consolas,monospace;font-weight:900;font-size:1.5rem;letter-spacing:.14em;color:var(--g2)}
+.poster .ph-name{font-weight:900;font-size:1.1rem}
+.poster .ph-score{font-size:13px;color:var(--muted)}
+.poster .ph-hint{margin-top:8px;font-size:12px;color:#7aa388;max-width:18em;line-height:1.5}
+.foot{margin-top:26px;text-align:center;font-size:12px;color:#7aa388;line-height:1.6}
 .share-box{
-  margin-top:8px;padding:12px;border-radius:12px;background:#fbfffc;
+  margin-top:10px;padding:12px;border-radius:12px;background:#fbfffc;
   border:1px dashed var(--line);font-size:13px;color:var(--muted);white-space:pre-wrap;
 }
 </style>
@@ -86,9 +109,9 @@ h1{font-size:clamp(1.55rem,5.5vw,1.9rem);margin:18px 0 10px;line-height:1.25;let
 
   <section id="home">
     <h1>测完告诉你<br/>是哪种薄肌生物。</h1>
-    <p class="lead">薄肌质量 · AI使用率 · 孙学 · 黄毛思想。<br/>搞怪 16 型，类似 MBTI，但更好笑。</p>
+    <p class="lead">薄肌质量 · AI使用率 · 孙学 · 黄毛思想。<br/>搞怪类型，类似 MBTI，但更好笑。</p>
     <p class="meta">约 1 分钟 · 12 题 · 不用登录</p>
-    <div class="dims" id="dims" aria-hidden="true"></div>
+    <div class="dims" id="dims"></div>
     <button class="btn" id="start" type="button">开始打分</button>
   </section>
 
@@ -101,14 +124,30 @@ h1{font-size:clamp(1.55rem,5.5vw,1.9rem);margin:18px 0 10px;line-height:1.25;let
 
   <section id="result" class="hidden">
     <div class="card">
-      <div class="hero-type">
-        <div class="code-big" id="typecode">JIAN</div>
-        <h2 class="name-big" id="typename">头顶尖尖型</h2>
-        <p class="hook" id="typeone"></p>
-        <div class="score-pill">薄肌指数 <b id="score">0</b></div>
+      <div class="hero">
+        <div id="hideBadge" class="badge-hide hidden">隐藏人格已激活</div>
+        <div class="code-big" id="typecode">SUN</div>
+        <h2 class="name-big" id="typename">孙型</h2>
+        <p class="subline" id="matchline"></p>
+        <p class="subline" id="typeone" style="margin-top:6px"></p>
       </div>
-      <div class="section-label">四维报表</div>
+
+      <div class="section">该类型的简单解读</div>
+      <div class="essay" id="essay"></div>
+
+      <div class="section">四维评分</div>
       <div id="bars"></div>
+
+      <div class="tip" id="tip">本测试仅供娱乐。隐藏人格属于故意埋的损招，请勿当成医学、健身评估或人生判决书。</div>
+
+      <div class="section">结果图</div>
+      <div class="poster" id="poster">
+        <div class="ph-code" id="phCode">SUN</div>
+        <div class="ph-name" id="phName">孙型</div>
+        <div class="ph-score" id="phScore">薄肌指数 60</div>
+        <div class="ph-hint">海报图位占位中。正式分享图之后会补上，现在可以先截图或复制文案发群。</div>
+      </div>
+      <button class="btn dark" id="savePoster" type="button">查看并保存结果图（即将上线）</button>
       <button class="btn" id="copy" type="button">复制分享文案</button>
       <button class="btn ghost" id="again" type="button">再测一次</button>
       <div class="share-box hidden" id="sharePreview"></div>
@@ -118,65 +157,207 @@ h1{font-size:clamp(1.55rem,5.5vw,1.9rem);margin:18px 0 10px;line-height:1.25;let
   <p class="foot">仅供娱乐，别拿去面试或相亲。<br/>薄肌打分器</p>
 </div>
 <script>
-const DATA = {"dims": [{"id": "Q", "name": "薄肌质量", "emoji": "🪞", "low_code": "B", "high_code": "H", "low_label": "薄/差", "high_label": "厚/成", "blurb": "镜下诚实度", "levels": {"低": "纸片本传，侧面吸腹也救不了。", "偏低": "有轮廓错觉，一碰就露馅。", "中": "不丢人也不骄傲，标准薄肌中位数。", "偏高": "朋友会说「你练了吧」，你还谦虚。", "高": "薄肌质量满分档，镜面谈判能力强。"}}, {"id": "A", "name": "AI使用率", "emoji": "🤖", "low_code": "L", "high_code": "I", "low_label": "少用", "high_label": "重度", "blurb": "计划和借口，谁先被生成", "levels": {"低": "信自己的直觉，AI 只配查天气。", "偏低": "偶尔问问，大部分还是凭感觉瞎练。", "中": "半人半机，提示词和杠铃各一半。", "偏高": "分化表比斜方肌整齐，执行另说。", "高": "人生决策先丢给模型，泵感也要提示词。"}}, {"id": "S", "name": "孙学", "emoji": "☀️", "low_code": "N", "high_code": "U", "low_label": "凡学", "high_label": "孙学", "blurb": "「除了身体不行」浓度", "levels": {"低": "听过孙学，但不背锅也不复读。", "偏低": "群里会笑，生活里不大用。", "中": "懂梗，关键时刻能接一句。", "偏高": "处事带孙味，自我安慰很丝滑。", "高": "孙学圣体：除了身体，逻辑闭环。"}}, {"id": "M", "name": "黄毛思想", "emoji": "⚡", "low_code": "W", "high_code": "Y", "low_label": "稳", "high_label": "黄", "blurb": "先干再说的互联网动能", "levels": {"低": "稳如老狗，先观望再观望。", "偏低": "心里想冲，手指还在收藏夹。", "中": "该冲冲该躺躺，情绪稳定版黄毛。", "偏高": "群聊点火器，现实偶尔真冲。", "高": "黄毛觉醒：口号、发型、行动力三件套。"}}], "types": {"BLNW": {"code": "MILD", "name": "温和薄皮", "hook": "不冲不卷不孙，薄得安详。", "one": "除了薄，很安全。"}, "BLNY": {"code": "YEET", "name": "莽一下型", "hook": "身体一般，胆气先到。", "one": "黄毛启动，肌群缓冲中。"}, "BLUW": {"code": "COPE", "name": "自我闭环型", "hook": "孙学托底，行动很稳。", "one": "嘴上悟了，卧推还在加载。"}, "BLUY": {"code": "JIAN", "name": "头顶尖尖型", "hook": "质量差·AI低·孙学高·黄毛高。", "one": "尖得发光：除了肉，全是戏。"}, "BINW": {"code": "PROMPT", "name": "提示词园丁", "hook": "AI高，人设稳，肉还薄。", "one": "计划完美，肱二头另请高明。"}, "BINY": {"code": "AGENT", "name": "智能体冲锋", "hook": "AI拉满还带黄毛。", "one": "模型说练，你说马上，镜子说等等。"}, "BIUW": {"code": "SUN", "name": "孙型", "hook": "质量一般·AI高·孙学高·黄毛稳。", "one": "除了身体不行，其他都还好。"}, "BIUY": {"code": "SUNK", "name": "孙黄混合燃料", "hook": "孙学+黄毛+AI。", "one": "精神富哥，实体订阅制。"}, "HLNW": {"code": "SOLID", "name": "老实成材", "hook": "质量上来了，人很稳。", "one": "少废话，多组数。"}, "HLNY": {"code": "GYMBO", "name": "健身房黄毛", "hook": "有点肉还敢冲。", "one": "三角肌和嗓门一起出勤。"}, "HLUW": {"code": "ZEN", "name": "悟了还练", "hook": "孙学高但不瞎冲，质量在线。", "one": "身心平衡的稀有薄转厚。"}, "HLUY": {"code": "BOSS", "name": "又厚又会说", "hook": "质量+孙+黄。", "one": "镜前谈判专家。"}, "HINW": {"code": "CYBER", "name": "赛博练家", "hook": "质量+AI，性格稳。", "one": "数据驱动增肌，人很温和。"}, "HINY": {"code": "MECHA", "name": "机甲冲锋", "hook": "质量+AI+黄毛。", "one": "提示词开路，重量跟上。"}, "HIUW": {"code": "ORCL", "name": "孙学成材", "hook": "质量+AI+孙，黄毛克制。", "one": "除了偶尔贫嘴，身体也行。"}, "HIUY": {"code": "FULL", "name": "四维拉满", "hook": "厚·AI·孙·黄全开。", "one": "互联网热梗本尊，肉也在线。"}}, "questions": [{"dim": "Q", "q": "镜子里最想骗过谁？", "opts": [["先骗自己", 0], ["骗群友", 2], ["谁也骗不了，但还要拍", 4]]}, {"dim": "Q", "q": "别人说你练了，你？", "opts": [["内心慌，表面笑", 0], ["承认有点感觉", 2], ["直接秀一下", 4]]}, {"dim": "Q", "q": "薄肌质量对你意味着？", "opts": [["人设", 0], ["进度条", 2], ["已经能谈判的资本", 4]]}, {"dim": "A", "q": "练前第一反应？", "opts": [["直接练", 0], ["先搜一组动作", 2], ["先让 AI 出分化", 4]]}, {"dim": "A", "q": "提示词和计划表，谁更勤？", "opts": [["都懒", 0], ["五五开", 2], ["提示词日更", 4]]}, {"dim": "A", "q": "AI 说你该加重量，你？", "opts": [["不理", 0], ["观望两周", 2], ["照做并截图汇报", 4]]}, {"dim": "S", "q": "「除了身体不行」你怎么用？", "opts": [["不用", 0], ["开玩笑用", 2], ["人生信条", 4]]}, {"dim": "S", "q": "群里孙学复读，你？", "opts": [["潜水", 0], ["笑一下", 2], ["带头复读并升华", 4]]}, {"dim": "S", "q": "失败时的自我解释？", "opts": [["怪运气", 0], ["怪执行", 2], ["怪身体，其他都对", 4]]}, {"dim": "M", "q": "看到刺激内容你？", "opts": [["收藏睡觉", 0], ["转发加句算了", 2], ["立刻想干一票", 4]]}, {"dim": "M", "q": "黄毛二字你联想到？", "opts": [["网梗", 0], ["危险但好笑", 2], ["行动纲领", 4]]}, {"dim": "M", "q": "朋友怂恿你冲，你？", "opts": [["稳", 0], ["心动", 2], ["已经在路上", 4]]}]};
 const LEVELS = ["低","偏低","中","偏高","高"];
-const dimById = Object.fromEntries(DATA.dims.map(d=>[d.id,d]));
+const ABC = ["A","B","C"];
+const DIMS = [
+  {id:"Q", name:"薄肌质量", blurb:"镜下诚实度", levels:{
+    "低":"纸片本传，侧面吸腹也救不了。",
+    "偏低":"有轮廓错觉，一碰就露馅。",
+    "中":"不丢人也不骄傲，标准薄肌中位数。",
+    "偏高":"朋友会说「你练了吧」，你还谦虚。",
+    "高":"薄肌质量满分档，镜面谈判能力强。"
+  }},
+  {id:"A", name:"AI使用率", blurb:"计划和借口，谁先被生成", levels:{
+    "低":"信自己的直觉，AI 只配查天气。",
+    "偏低":"偶尔问问，大部分还是凭感觉瞎练。",
+    "中":"半人半机，提示词和杠铃各一半。",
+    "偏高":"分化表比斜方肌整齐，执行另说。",
+    "高":"人生决策先丢给模型，泵感也要提示词。"
+  }},
+  {id:"S", name:"孙学", blurb:"「除了身体不行」浓度", levels:{
+    "低":"听过孙学，但不背锅也不复读。",
+    "偏低":"群里会笑，生活里不大用。",
+    "中":"懂梗，关键时刻能接一句。",
+    "偏高":"处事带孙味，自我安慰很丝滑。",
+    "高":"孙学圣体：除了身体，逻辑闭环。"
+  }},
+  {id:"M", name:"黄毛思想", blurb:"先干再说的互联网动能", levels:{
+    "低":"稳如老狗，先观望再观望。",
+    "偏低":"心里想冲，手指还在收藏夹。",
+    "中":"该冲冲该躺躺，情绪稳定版黄毛。",
+    "偏高":"群聊点火器，现实偶尔真冲。",
+    "高":"黄毛觉醒：口号、发型、行动力三件套。"
+  }}
+];
+const dimById = Object.fromEntries(DIMS.map(d=>[d.id,d]));
+
+/* profile: [Q,A,S,M] each 0..4 ; hidden optional */
+const TYPES = [
+  {code:"MILD",name:"温和薄皮",profile:[1,1,1,1],one:"除了薄，很安全。",hook:"不冲不卷不孙，薄得安详。",
+   essay:"你薄得克制，也稳得克制。镜子不骗人，群聊也不点火。朋友夸你「挺正常」，其实是夸你不会出事。薄肌指数也许不高，但风险更低——在这个赛道里，这也算一种天赋。"},
+  {code:"YEET",name:"莽一下型",profile:[1,1,1,4],one:"黄毛启动，肌群缓冲中。",hook:"身体一般，胆气先到。",
+   essay:"决策比肱二头兴奋。计划还在备忘录，人已经在路上。薄是薄，但气势先把场面撑住了。记得回来补组数。"},
+  {code:"COPE",name:"自我闭环型",profile:[1,1,4,1],one:"嘴上悟了，卧推还在加载。",hook:"孙学托底，行动很稳。",
+   essay:"你很会给失败一个体面解释。逻辑闭环漂亮，卧推数字另说。除了身体和进度条，你其实挺会过日子。"},
+  {code:"JIAN",name:"头顶尖尖型",profile:[0,0,4,4],one:"尖得发光：除了肉，全是戏。",hook:"质量差 · AI低 · 孙学高 · 黄毛高。",
+   essay:"人设比肌纤维发达。孙学和黄毛轮流值班，镜子却很诚实。你不是没故事，是故事比肱三头长。"},
+  {code:"PROMPT",name:"提示词园丁",profile:[1,4,1,1],one:"计划完美，肱二头另请高明。",hook:"AI高，人设稳，肉还薄。",
+   essay:"分化表比斜方肌整齐。提示词日更，深蹲偶尔断更。你不是不努力，是努力点点在对话框里。"},
+  {code:"AGENT",name:"智能体冲锋",profile:[1,4,1,4],one:"模型说练，你说马上，镜子说等等。",hook:"AI拉满还带黄毛。",
+   essay:"执行力外包给模型，冲劲留给群聊。你很现代，也很薄。建议把「马上」改成「今天三组」。"},
+  {code:"SUN",name:"孙型",profile:[1,4,4,1],one:"除了身体不行，其他都还好。",hook:"质量一般 · AI高 · 孙学高 · 黄毛稳。",
+   essay:"世界观能自洽，训练日志偶尔失踪。你会安慰人，也会安慰自己。除了身体这一项，简历其实挺好看——问题是身体这一项老爱点名。"},
+  {code:"SUNK",name:"孙黄混合燃料",profile:[1,4,4,4],one:"精神富哥，实体订阅制。",hook:"孙学 + 黄毛 + AI。",
+   essay:"嘴上宇宙，身上经济舱。你有梗、有冲、有提示词，缺的是连续八周同一动作。精神已经上市，肉体还在众筹。"},
+  {code:"SOLID",name:"老实成材",profile:[4,1,1,1],one:"少废话，多组数。",hook:"质量上来了，人很稳。",
+   essay:"不炫，不孙，不瞎冲。增肌像上班打卡，薄肌开始离职。你是健身房里最安静的那种狠人。"},
+  {code:"GYMBO",name:"健身房黄毛",profile:[4,1,1,4],one:"三角肌和嗓门一起出勤。",hook:"有点肉还敢冲。",
+   essay:"器械区和群聊你都在场。有料，也有火气。记得把火气留给重量，别留给前台。"},
+  {code:"ZEN",name:"悟了还练",profile:[4,1,4,1],one:"身心平衡的稀有薄转厚。",hook:"孙学高但不瞎冲，质量在线。",
+   essay:"你懂「除了身体不行」的笑话，但还是去练了。悟性和肌群同时在线，稀有得像会拉伸还坚持做满组的人。"},
+  {code:"BOSS",name:"又厚又会说",profile:[4,1,4,4],one:"镜前谈判专家。",hook:"质量 + 孙 + 黄。",
+   essay:"有肉有梗有场控。你不是在健身，是在经营一个小型人设公司，而且好像盈利了。"},
+  {code:"CYBER",name:"赛博练家",profile:[4,4,1,1],one:"数据驱动增肌，人很温和。",hook:"质量 + AI，性格稳。",
+   essay:"表格比镜子更让你安心。你相信渐进超负荷，也相信电子表格。黄毛和孙学对你来说太吵。"},
+  {code:"MECHA",name:"机甲冲锋",profile:[4,4,1,4],one:"提示词开路，重量跟上。",hook:"质量 + AI + 黄毛。",
+   essay:"AI 出计划，你负责把杠铃推走。赛博肉体刚开始成形，冲劲已经超额。"},
+  {code:"ORCL",name:"孙学成材",profile:[4,4,4,1],one:"除了偶尔贫嘴，身体也行。",hook:"质量 + AI + 孙，黄毛克制。",
+   essay:"你会说也会练。孙学是调味料，不是主食。偶尔贫嘴，进度条却在老实上涨。"},
+  {code:"FULL",name:"四维拉满",profile:[4,4,4,4],one:"互联网热梗本尊，肉也在线。",hook:"厚 · AI · 孙 · 黄全开。",
+   essay:"你是完整 DLC。镜子、模型、复读、冲锋四件套齐活。建议适量收敛，免得群友先累。"},
+  {code:"PAPER",name:"纸片战士",profile:[0,2,2,4],one:"战斗力在嘴上，血条在锁骨。",hook:"质量很低，黄毛不低。",
+   essay:"宣战很快，增肌很慢。你适合先把宣战改成预约私教，再考虑称霸评论区。"},
+  {code:"NPC",name:"健身房路人甲",profile:[2,2,2,2],one:"出现过，留下过，没人记得重量。",hook:"四维都在中位附近。",
+   essay:"你是中位数本数。不丢脸，也不出圈。想爆红得先选一个极端维度拉满——或者继续当最安全的路人甲。"},
+  {code:"CAP",name:"口头合约型",profile:[1,2,4,2],one:"下周一定练，本周先说话。",hook:"孙学偏高，执行偏口头。",
+   essay:"你和自己签了很多健身条约，违约金是一句「下次一定」。合同很完整，履约率另说。"},
+  {code:"BETA",name:"内测用户",profile:[1,4,2,2],one:"人生和增肌都还在内测。",hook:"AI高，质量中低。",
+   essay:"你喜欢新模型、新分化、新借口。正式版身材遥遥无期，内测笔记倒是很多。请尽快从 beta 毕业。"},
+  {code:"AURA",name:"气场薄肌",profile:[2,2,3,4],one:"肉不一定厚，场必须满。",hook:"黄毛 + 孙，质量一般。",
+   essay:"你靠气场完成许多本该靠斜方肌完成的事。有效，但不持久。气场续费的方式，其实是去练。"},
+  {code:"PATCH",name:"补丁侠",profile:[2,4,2,1],one:"哪里漏补哪里，很少重做系统。",hook:"AI中高，黄毛低。",
+   essay:"痛了搜教程，卡了问模型。你很会修局部，却很少重做整体训练系统。补丁堆多了，也该重构了。"},
+  {code:"VOID",name:"镜前消失者",hidden:true,profile:[0,0,0,0],one:"摄像头开了，人没了。",hook:"镜面异常因子已接管。",
+   essay:"系统检测到你在镜头前持续失踪。不是薄，是隐身。建议先出现在镜子里，再谈薄肌指数。"},
+  {code:"PURE",name:"纯爱练人",hidden:true,profile:[4,2,0,0],one:"不冲不孙，只练。",hook:"黄毛与孙学同时熄火。",
+   essay:"在这个测试里你几乎不玩梗。稀有得像健身房里认真拉伸还不拍视频的人。请继续，别被我们带歪。"},
+  {code:"DRIP",name:"装备先于肌群",hidden:true,profile:[1,3,2,3],one:"壶铃还没买，装备先齐了。",hook:"消费力异常因子已接管。",
+   essay:"购物车比训练日志厚。灵魂富足，肌群欠费。装备可以先放着，人可以先去卧推。"}
+];
+
+const QUESTIONS = [
+  {dim:"Q", q:"镜子里最想骗过谁？", opts:[["先骗自己",0],["骗群友",2],["谁也骗不了，但还要拍",4]]},
+  {dim:"Q", q:"别人说你练了，你？", opts:[["内心慌，表面笑",0],["承认有点感觉",2],["直接秀一下",4]]},
+  {dim:"Q", q:"薄肌质量对你意味着？", opts:[["人设",0],["进度条",2],["已经能谈判的资本",4]]},
+  {dim:"A", q:"练前第一反应？", opts:[["直接练",0],["先搜一组动作",2],["先让 AI 出分化",4]]},
+  {dim:"A", q:"提示词和计划表，谁更勤？", opts:[["都懒",0],["五五开",2],["提示词日更",4]]},
+  {dim:"A", q:"AI 说你该加重量，你？", opts:[["不理",0],["观望两周",2],["照做并截图汇报",4]]},
+  {dim:"S", q:"「除了身体不行」你怎么用？", opts:[["不用",0],["开玩笑用",2],["人生信条",4]]},
+  {dim:"S", q:"群里孙学复读，你？", opts:[["潜水",0],["笑一下",2],["带头复读并升华",4]]},
+  {dim:"S", q:"失败时的自我解释？", opts:[["怪运气",0],["怪执行",2],["怪身体，其他都对",4]]},
+  {dim:"M", q:"看到刺激内容你？", opts:[["收藏睡觉",0],["转发加句算了",2],["立刻想干一票",4]]},
+  {dim:"M", q:"黄毛二字你联想到？", opts:[["网梗",0],["危险但好笑",2],["行动纲领",4]]},
+  {dim:"M", q:"朋友怂恿你冲，你？", opts:[["稳",0],["心动",2],["已经在路上",4]]}
+];
+
 let i=0, answers={Q:[],A:[],S:[],M:[]};
 const $=id=>document.getElementById(id);
 function show(id){["home","quiz","result"].forEach(x=>$(x).classList.toggle("hidden",x!==id)); window.scrollTo({top:0,behavior:"smooth"});}
-function avg(a){return a.reduce((x,y)=>x+y,0)/a.length}
+function avg(a){return a.reduce((x,y)=>x+y,0)/(a.length||1)}
 function toLevel(v){return Math.max(0,Math.min(4,Math.round(avg(v))));}
-function toBinary(level, dim){return level <= 2 ? dim.low_code : dim.high_code;}
+
+function matchType(levels){
+  const vec = ["Q","A","S","M"].map(id=>levels[id]);
+  // hidden triggers
+  if(vec.every(v=>v<=1) && vec.filter(v=>v===0).length>=3){
+    return {t:TYPES.find(x=>x.code==="VOID"), dist:0, match:100, hidden:true};
+  }
+  if(levels.Q>=3 && levels.S<=1 && levels.M<=1){
+    return {t:TYPES.find(x=>x.code==="PURE"), dist:0, match:96, hidden:true};
+  }
+  if(levels.A>=3 && levels.Q<=2 && levels.M>=2 && levels.S<=3){
+    // soft drip: high AI + mid impulse + not thick
+    const drip = TYPES.find(x=>x.code==="DRIP");
+    const d = manhattan(vec, drip.profile);
+    if(d<=3 && levels.Q<=2){
+      return {t:drip, dist:d, match:Math.max(80, 100-d*6), hidden:true};
+    }
+  }
+  let best=null, bestD=1e9;
+  for(const t of TYPES){
+    if(t.hidden) continue;
+    const d = manhattan(vec, t.profile);
+    if(d<bestD){bestD=d; best=t;}
+  }
+  const match = Math.max(52, Math.round(100 - bestD * 8));
+  return {t:best, dist:bestD, match, hidden:!!best.hidden};
+}
+function manhattan(a,b){return a.reduce((s,v,i)=>s+Math.abs(v-b[i]),0)}
+
 function renderHome(){
-  $("dims").innerHTML = DATA.dims.map(d=>`<div class="dim"><div class="ico">${d.emoji||"·"}</div><div><b>${d.name}</b><span>${d.blurb}</span></div></div>`).join("");
+  $("dims").innerHTML = DIMS.map(d=>`<div class="dim"><b>${d.name}</b><span>${d.blurb}</span></div>`).join("");
 }
 function renderQ(){
-  const t=DATA.questions[i];
+  const t=QUESTIONS[i];
   const d=dimById[t.dim];
-  $("qno").textContent = `第 ${i+1} / ${DATA.questions.length} 题 · ${d.name}`;
+  $("qno").textContent = `第 ${i+1} / ${QUESTIONS.length} 题 · ${d.name}`;
   $("qtext").textContent = t.q;
-  $("prog").style.width = ((i/DATA.questions.length)*100)+"%";
+  $("prog").style.width = ((i/QUESTIONS.length)*100)+"%";
   $("opts").innerHTML="";
-  t.opts.forEach(([text,score])=>{
+  t.opts.forEach(([text,score], idx)=>{
     const b=document.createElement("button");
-    b.type="button"; b.className="opt"; b.textContent=text;
-    b.onclick=()=>{answers[t.dim].push(score); i++; i>=DATA.questions.length?finish():renderQ();};
+    b.type="button"; b.className="opt";
+    b.innerHTML = `<span class="abc">${ABC[idx]}</span><span class="txt">${text}</span>`;
+    b.onclick=()=>{answers[t.dim].push(score); i++; i>=QUESTIONS.length?finish():renderQ();};
     $("opts").appendChild(b);
   });
 }
-function shareText(score,t,levels){
-  const dimLine = DATA.dims.map(d=>`${d.name}${LEVELS[levels[d.id]]}`).join(" · ");
-  return `我测出【${t.code} · ${t.name}】\n薄肌指数 ${score}\n${t.one}\n${dimLine}\n你也来测：https://thinmuscle.pages.dev/\n#薄肌打分器 #薄肌指数`;
+function shareText(score,t,levels,match){
+  const dimLine = DIMS.map(d=>`${d.name}${LEVELS[levels[d.id]]}`).join(" · ");
+  return `我测出【${t.code} · ${t.name}】\n匹配度 ${match}% · 薄肌指数 ${score}\n${t.one}\n${dimLine}\n你也来测：https://thinmuscle.pages.dev/\n#薄肌打分器 #薄肌指数`;
 }
 function finish(){
   $("prog").style.width="100%";
-  const levels={}, letters=[];
+  const levels={};
   let sum=0;
-  DATA.dims.forEach(d=>{
-    const lv = toLevel(answers[d.id]);
-    levels[d.id]=lv; sum += [20,40,60,80,100][lv];
-    letters.push(toBinary(lv,d));
+  DIMS.forEach(d=>{
+    const lv=toLevel(answers[d.id]);
+    levels[d.id]=lv;
+    sum += [20,40,60,80,100][lv];
   });
-  const key = letters.join("");
-  const t = DATA.types[key] || {code:"????",name:"未命名型",one:"组合落在表外，等文案补全。",hook:""};
-  const score = Math.round(sum/4);
-  const text = shareText(score,t,levels);
-  window.__last={score,t,levels,key,text};
-  $("score").textContent = score;
+  const score=Math.round(sum/4);
+  const {t, match, hidden} = matchType(levels);
+  const text = shareText(score,t,levels,match);
+  window.__last={score,t,levels,match,hidden,text};
+
+  $("hideBadge").classList.toggle("hidden", !hidden);
   $("typecode").textContent = t.code;
   $("typename").textContent = t.name;
-  $("typeone").textContent = t.one + (t.hook ? " " + t.hook : "");
-  $("bars").innerHTML = DATA.dims.map(d=>{
+  $("matchline").textContent = hidden
+    ? `匹配度 ${match}% · ${t.hook}`
+    : `匹配度 ${match}% · 薄肌指数 ${score}`;
+  $("typeone").textContent = t.one;
+  $("essay").textContent = t.essay;
+  $("bars").innerHTML = DIMS.map(d=>{
     const lv=levels[d.id];
     const w=[20,40,60,80,100][lv];
-    const comment=d.levels[LEVELS[lv]];
-    return `<div class="row"><div class="lab"><span>${d.emoji||""} ${d.name}</span><span>${LEVELS[lv]}</span></div><div class="track"><span style="width:${w}%"></span></div><div class="note">${comment}</div></div>`;
+    const pts=[2,3,4,5,6][lv];
+    return `<div class="row"><div class="lab"><span>${d.name}</span><span class="lv">${LEVELS[lv]} / ${pts}分</span></div><div class="track"><span style="width:${w}%"></span></div><div class="note">${d.levels[LEVELS[lv]]}</div></div>`;
   }).join("");
+  $("phCode").textContent = t.code;
+  $("phName").textContent = t.name;
+  $("phScore").textContent = `薄肌指数 ${score} · 匹配度 ${match}%`;
   $("sharePreview").classList.add("hidden");
+  $("savePoster").textContent = "查看并保存结果图（即将上线）";
   show("result");
 }
+
 $("start").onclick=()=>{i=0;answers={Q:[],A:[],S:[],M:[]};show("quiz");renderQ();};
 $("again").onclick=()=>{i=0;answers={Q:[],A:[],S:[],M:[]};show("quiz");renderQ();};
+$("savePoster").onclick=()=>{
+  $("savePoster").textContent="海报图稍后补上，先截图或复制文案吧";
+  setTimeout(()=>$("savePoster").textContent="查看并保存结果图（即将上线）",2200);
+};
 $("copy").onclick=async()=>{
   const text=window.__last.text;
   try{
