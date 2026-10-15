@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>健身房简易法庭｜薄肌指数</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"SF Mono","Cascadia Code","PingFang SC",monospace;background:#050805;color:#b8f5c0;min-height:100vh}
+.wrap{max-width:520px;margin:0 auto;padding:24px 16px 56px}
+.terminal{border:1px solid #1f6b3a;background:#0a120c;padding:18px;box-shadow:0 0 40px rgba(40,200,100,.08)}
+.scan{color:#3dff8a;font-size:12px;margin-bottom:10px}
+h1{font-size:1.5rem;color:#3dff8a;margin-bottom:8px;font-weight:700}
+.muted{color:#6a9a74;font-size:.85rem;margin-bottom:16px}
+.q{color:#e8ffe9;font-size:1.05rem;margin:12px 0}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;padding:12px;background:#07140a;border:1px dashed #1f6b3a;color:#b8f5c0;cursor:pointer;font-size:.9rem;font-family:inherit}
+.opt:hover{border-style:solid;border-color:#3dff8a;color:#3dff8a}
+.btn{margin-top:12px;padding:10px 16px;background:#3dff8a;color:#041006;border:none;font-weight:800;cursor:pointer;font-family:inherit}
+.btn.ghost{background:transparent;border:1px solid #3dff8a;color:#3dff8a;margin-left:8px}
+.hidden{display:none!important}
+.verdict{font-size:1.6rem;color:#3dff8a;margin:10px 0}
+.meta{font-size:12px;color:#6a9a74}
+.box{margin-top:12px;padding:12px;border-left:3px solid #3dff8a;background:#07140a;color:#cfe9d3;font-size:.9rem}
+.gauge{height:8px;background:#122018;margin:14px 0;position:relative}
+.gauge>i{display:block;height:100%;background:#3dff8a;width:0;transition:.3s}
+.foot{margin-top:18px;font-size:11px;color:#355540;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="terminal" id="start">
+    <div class="scan">> GYM_COURT.exe &nbsp;|&nbsp; CASE: THIN_MUSCLE</div>
+    <h1>健身房简易法庭</h1>
+    <p class="muted">你被控「外强中干 / 镜面虚高 / 计划强迫」。请回答 8 项质询。判决书可截图留档。</p>
+    <button class="btn" id="go">出庭</button>
+  </div>
+  <div class="terminal hidden" id="quiz">
+    <div class="scan" id="step">> INTERROGATION</div>
+    <div class="gauge"><i id="bar"></i></div>
+    <div class="q" id="qtext"></div>
+    <div id="opts"></div>
+  </div>
+  <div class="terminal hidden" id="result">
+    <div class="scan">> VERDICT_RENDERED</div>
+    <div class="meta" id="rcode"></div>
+    <div class="verdict" id="rname"></div>
+    <div class="meta" id="rtag"></div>
+    <div class="box" id="rdesc"></div>
+    <div class="box" id="rtips" style="border-color:#6a9a74;margin-top:8px"></div>
+    <button class="btn" id="again">上诉（重测）</button>
+    <button class="btn ghost" id="copy">拷贝判决</button>
+  </div>
+  <p class="foot">TMI v3 · satire module · no medical claims</p>
+</div>
+<script>
+const QUESTIONS=[{"q": "镜子里最常做的动作是？", "opts": [["A", "侧身+吸腹，假装有腹肌线", "paper"], ["B", "拍完立刻删，说光线不行", "theory"], ["C", "开美颜到自己都认不出", "ac"], ["D", "认真对比上周同一姿势", "lab"]]}, {"q": "蛋白粉在你家的真实状态？", "opts": [["A", "买了，当咖啡伴侣偶尔冲", "paper"], ["B", "研究成分表比喝的时间还长", "theory"], ["C", "室友的，我蹭过两勺", "soc"], ["D", "空桶堆成一座小小纪念碑", "lab"]]}, {"q": "有人问「你练吗」你怎么回？", "opts": [["A", "「练啊，最近在调整平台期」", "paper"], ["B", "先解释分化、容量、RPE十分钟", "theory"], ["C", "「主要是练心态」", "ac"], ["D", "默默发一张仰角自拍", "soc"]]}, {"q": "夏天短袖的穿衣哲学？", "opts": [["A", "袖口必须卡在「想象中的三角肌」", "paper"], ["B", "黑色显瘦，永远黑色", "ac"], ["C", "外面再罩一件，说空调太冷", "ac"], ["D", "敢穿，但只在熟人局", "soc"]]}, {"q": "刷到增肌博主你的第一反应？", "opts": [["A", "收藏，明天开始（从未开始）", "paper"], ["B", "评论区纠错：你这个动作顶峰收缩不对", "theory"], ["C", "转发给群友：你们看这个搭子", "soc"], ["D", "默默加训练量，然后腰酸三天", "lab"]]}, {"q": "卧推时最真实的内心戏？", "opts": [["A", "杠铃两侧其实没那么多片……吧", "paper"], ["B", "在算机械张力与代谢压力配比", "theory"], ["C", "希望有人路过夸一句", "soc"], ["D", "保护杆比我还累", "lab"]]}, {"q": "朋友聚餐点烤串，你？", "opts": [["A", "先发朋友圈「放纵餐」再埋头吃", "paper"], ["B", "估算蛋白质克数到小数点", "theory"], ["C", "说自己在备赛（没有比赛）", "ac"], ["D", "真吃，第二天加练弥补", "lab"]]}, {"q": "薄肌这件事，你最想骗过谁？", "opts": [["A", "未来的自己", "paper"], ["B", "懂行的健身房老哥们", "theory"], ["C", "可能看到照片的所有人", "ac"], ["D", "其实谁也骗不了，但还要练", "lab"]]}];
+const RESULTS={"paper": {"name": "纸片薄肌", "code": "TMI-P", "tag": "视觉系 · 发力靠想象", "desc": "你不是没练，你是练给镜子和镜头看的。侧光、角度、吸腹三位一体，实体触感约等于包装纸。朋友说你瘦，你说你在增；朋友说你壮，你知道那是滤镜。", "tips": "建议：把「明天开始」改成「今天做一组」，纸片也能叠厚度。", "vibe": "📸🪞✨"}, "theory": {"name": "理论薄肌", "code": "TMI-T", "tag": "百科全书 · 肌群在 PPT 里", "desc": "你能讲清每个动作的目标肌群，却讲不清自己上次突破是哪天。知识密度拉满，横截面积暂缓。你不是懒，你是还在优化计划。", "tips": "建议：少开一篇综述，多做一个动作。论文写不完，卧推可以写完。", "vibe": "📚🧠📐"}, "ac": {"name": "空调薄肌", "code": "TMI-A", "tag": "恒温动物 · 出汗可选", "desc": "你的训练环境必须舒适，理想温度 26°C，理想强度「感觉有了就行」。薄，是因为热量管理过于成功；肌，是一种季节限定概念。", "tips": "建议：把空调调低两度，或把借口调低两度。", "vibe": "❄️🛋️🎮"}, "soc": {"name": "搭子薄肌", "code": "TMI-S", "tag": "社交驱动 · 有人看才有输出", "desc": "一个人练像刑满释放，有搭子就像奥运。你的容量曲线和群聊活跃度正相关。薄肌不是体质，是排期问题。", "tips": "建议：给自己签一份「无搭子也要去」的屈辱合同。", "vibe": "👯📱🗣️"}, "lab": {"name": "老实薄肌", "code": "TMI-L", "tag": "真练了 · 基因在搞事", "desc": "你确实去了，也酸了，也喝了蛋白粉。镜子却像在演默剧。你是薄肌界的劳动模范：投入真实，回报抽象。别哭，至少你比纸片版心安。", "tips": "建议：睡觉和吃饭比再加一组更狠。薄有时是进度条，不是判决书。", "vibe": "💪😤🏋️"}};
+let i=0,scores=[];
+const $=id=>document.getElementById(id);
+function show(id){['start','quiz','result'].forEach(x=>$(x).classList.toggle('hidden',x!==id));}
+function render(){
+  const t=QUESTIONS[i];
+  $('step').textContent=`> Q${i+1}/${QUESTIONS.length}`;
+  $('bar').style.width=(i/QUESTIONS.length*100)+'%';
+  $('qtext').textContent='质询：'+t.q;
+  $('opts').innerHTML='';
+  t.opts.forEach(([letter,text,key])=>{
+    const b=document.createElement('button');
+    b.className='opt'; b.textContent=`[${letter}] ${text}`;
+    b.onclick=()=>{scores.push(key);i++;i>=QUESTIONS.length?finish():render();};
+    $('opts').appendChild(b);
+  });
+}
+function finish(){
+  const cnt={};scores.forEach(k=>cnt[k]=(cnt[k]||0)+1);
+  const key=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0][0];
+  const r=RESULTS[key]; window.__last=r;
+  $('bar').style.width='100%';
+  $('rcode').textContent='CASE_ID '+r.code+' · '+r.vibe;
+  $('rname').textContent='判决：'+r.name;
+  $('rtag').textContent=r.tag;
+  $('rdesc').textContent=r.desc;
+  $('rtips').textContent='法庭建议：'+r.tips;
+  show('result');
+}
+$('go').onclick=()=>{i=0;scores=[];show('quiz');render();};
+$('again').onclick=()=>{i=0;scores=[];show('quiz');render();};
+$('copy').onclick=()=>{const r=window.__last;navigator.clipboard.writeText(`【健身房简易法庭】判决：${r.name}（${r.code}）\\n${r.tag}\\n${r.desc}\\n#薄肌指数`);alert('判决已复制');};
+</script>
+</body>
+</html>
