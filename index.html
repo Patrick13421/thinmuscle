@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>薄肌指数｜社死版结果卡</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0b0b0f;color:#f5f5f5;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:20px 16px 48px}
+.hero{border:2px solid #fff;padding:20px;margin-bottom:16px;position:relative}
+.hero:before{content:"FOR SHARE";position:absolute;top:-10px;right:12px;background:#0b0b0f;padding:0 8px;font-size:11px;letter-spacing:.2em;color:#ff3d71}
+.h-label{font-size:12px;letter-spacing:.25em;color:#ff3d71}
+h1{font-size:2.2rem;line-height:1.15;margin:10px 0;font-weight:900}
+.muted{color:#9a9aad;font-size:.9rem}
+.step{font-size:12px;color:#ff3d71;margin-bottom:8px;letter-spacing:.15em}
+.q{font-size:1.25rem;font-weight:700;margin-bottom:14px}
+.opt{width:100%;margin:8px 0;padding:16px;background:#16161f;border:1px solid #2a2a36;color:#fff;text-align:left;font-size:.95rem;cursor:pointer}
+.opt:active,.opt:hover{border-color:#ff3d71;background:#1c1218}
+.poster{border:3px solid #ff3d71;padding:24px 18px;background:linear-gradient(180deg,#160a12,#0b0b0f);min-height:420px;display:flex;flex-direction:column;justify-content:space-between}
+.poster .big{font-size:2.6rem;font-weight:900;line-height:1.1;word-break:break-word}
+.poster .code{font-family:ui-monospace,monospace;color:#ff3d71;margin-top:8px}
+.poster .body{margin-top:18px;font-size:.95rem;color:#ddd}
+.poster .bar{margin-top:20px;border-top:1px dashed #444;padding-top:12px;font-size:12px;color:#888;display:flex;justify-content:space-between}
+.btn{margin-top:14px;width:100%;padding:14px;border:none;background:#ff3d71;color:#fff;font-weight:800;font-size:1rem;cursor:pointer}
+.btn.sec{background:transparent;border:1px solid #444;color:#ccc;margin-top:8px}
+.hidden{display:none!important}
+.foot{text-align:center;margin-top:20px;font-size:11px;color:#555}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="start">
+    <div class="hero">
+      <div class="h-label">THIN MUSCLE INDEX</div>
+      <h1>测完请截图<br/>这页就是海报</h1>
+      <p class="muted">八题，专治「我感觉我有点肌」。结果卡按社死比例放大。</p>
+    </div>
+    <button class="btn" id="go">生成我的薄肌罪名</button>
+  </div>
+  <div id="quiz" class="hidden">
+    <div class="step" id="step"></div>
+    <div class="q" id="qtext"></div>
+    <div id="opts"></div>
+  </div>
+  <div id="result" class="hidden">
+    <div class="poster" id="poster">
+      <div>
+        <div class="h-label">薄肌指数认证</div>
+        <div class="big" id="rname"></div>
+        <div class="code" id="rcode"></div>
+        <div class="body" id="rdesc"></div>
+      </div>
+      <div class="bar"><span id="rtag"></span><span>TMI.pages</span></div>
+    </div>
+    <button class="btn" id="again">重测</button>
+    <button class="btn sec" id="copy">复制文案</button>
+  </div>
+  <p class="foot">娱乐向刻板印象 · 不是身体羞辱是自嘲模因</p>
+</div>
+<script>
+const QUESTIONS=[{"q": "镜子里最常做的动作是？", "opts": [["A", "侧身+吸腹，假装有腹肌线", "paper"], ["B", "拍完立刻删，说光线不行", "theory"], ["C", "开美颜到自己都认不出", "ac"], ["D", "认真对比上周同一姿势", "lab"]]}, {"q": "蛋白粉在你家的真实状态？", "opts": [["A", "买了，当咖啡伴侣偶尔冲", "paper"], ["B", "研究成分表比喝的时间还长", "theory"], ["C", "室友的，我蹭过两勺", "soc"], ["D", "空桶堆成一座小小纪念碑", "lab"]]}, {"q": "有人问「你练吗」你怎么回？", "opts": [["A", "「练啊，最近在调整平台期」", "paper"], ["B", "先解释分化、容量、RPE十分钟", "theory"], ["C", "「主要是练心态」", "ac"], ["D", "默默发一张仰角自拍", "soc"]]}, {"q": "夏天短袖的穿衣哲学？", "opts": [["A", "袖口必须卡在「想象中的三角肌」", "paper"], ["B", "黑色显瘦，永远黑色", "ac"], ["C", "外面再罩一件，说空调太冷", "ac"], ["D", "敢穿，但只在熟人局", "soc"]]}, {"q": "刷到增肌博主你的第一反应？", "opts": [["A", "收藏，明天开始（从未开始）", "paper"], ["B", "评论区纠错：你这个动作顶峰收缩不对", "theory"], ["C", "转发给群友：你们看这个搭子", "soc"], ["D", "默默加训练量，然后腰酸三天", "lab"]]}, {"q": "卧推时最真实的内心戏？", "opts": [["A", "杠铃两侧其实没那么多片……吧", "paper"], ["B", "在算机械张力与代谢压力配比", "theory"], ["C", "希望有人路过夸一句", "soc"], ["D", "保护杆比我还累", "lab"]]}, {"q": "朋友聚餐点烤串，你？", "opts": [["A", "先发朋友圈「放纵餐」再埋头吃", "paper"], ["B", "估算蛋白质克数到小数点", "theory"], ["C", "说自己在备赛（没有比赛）", "ac"], ["D", "真吃，第二天加练弥补", "lab"]]}, {"q": "薄肌这件事，你最想骗过谁？", "opts": [["A", "未来的自己", "paper"], ["B", "懂行的健身房老哥们", "theory"], ["C", "可能看到照片的所有人", "ac"], ["D", "其实谁也骗不了，但还要练", "lab"]]}];
+const RESULTS={"paper": {"name": "纸片薄肌", "code": "TMI-P", "tag": "视觉系 · 发力靠想象", "desc": "你不是没练，你是练给镜子和镜头看的。侧光、角度、吸腹三位一体，实体触感约等于包装纸。朋友说你瘦，你说你在增；朋友说你壮，你知道那是滤镜。", "tips": "建议：把「明天开始」改成「今天做一组」，纸片也能叠厚度。", "vibe": "📸🪞✨"}, "theory": {"name": "理论薄肌", "code": "TMI-T", "tag": "百科全书 · 肌群在 PPT 里", "desc": "你能讲清每个动作的目标肌群，却讲不清自己上次突破是哪天。知识密度拉满，横截面积暂缓。你不是懒，你是还在优化计划。", "tips": "建议：少开一篇综述，多做一个动作。论文写不完，卧推可以写完。", "vibe": "📚🧠📐"}, "ac": {"name": "空调薄肌", "code": "TMI-A", "tag": "恒温动物 · 出汗可选", "desc": "你的训练环境必须舒适，理想温度 26°C，理想强度「感觉有了就行」。薄，是因为热量管理过于成功；肌，是一种季节限定概念。", "tips": "建议：把空调调低两度，或把借口调低两度。", "vibe": "❄️🛋️🎮"}, "soc": {"name": "搭子薄肌", "code": "TMI-S", "tag": "社交驱动 · 有人看才有输出", "desc": "一个人练像刑满释放，有搭子就像奥运。你的容量曲线和群聊活跃度正相关。薄肌不是体质，是排期问题。", "tips": "建议：给自己签一份「无搭子也要去」的屈辱合同。", "vibe": "👯📱🗣️"}, "lab": {"name": "老实薄肌", "code": "TMI-L", "tag": "真练了 · 基因在搞事", "desc": "你确实去了，也酸了，也喝了蛋白粉。镜子却像在演默剧。你是薄肌界的劳动模范：投入真实，回报抽象。别哭，至少你比纸片版心安。", "tips": "建议：睡觉和吃饭比再加一组更狠。薄有时是进度条，不是判决书。", "vibe": "💪😤🏋️"}};
+let i=0,scores=[];
+const $=id=>document.getElementById(id);
+function show(id){['start','quiz','result'].forEach(x=>$(x).classList.toggle('hidden',x!==id));}
+function render(){
+  const t=QUESTIONS[i];
+  $('step').textContent=`QUESTION 0${i+1} / 0${QUESTIONS.length}`;
+  $('qtext').textContent=t.q;
+  $('opts').innerHTML='';
+  t.opts.forEach(([letter,text,key])=>{
+    const b=document.createElement('button');
+    b.className='opt'; b.textContent=`${letter}  ${text}`;
+    b.onclick=()=>{scores.push(key);i++;i>=QUESTIONS.length?finish():render();};
+    $('opts').appendChild(b);
+  });
+}
+function finish(){
+  const cnt={};scores.forEach(k=>cnt[k]=(cnt[k]||0)+1);
+  const key=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0][0];
+  const r=RESULTS[key]; window.__last=r;
+  $('rname').textContent=r.name;
+  $('rcode').textContent=r.code+'  '+r.vibe;
+  $('rdesc').textContent=r.desc+' '+r.tips;
+  $('rtag').textContent=r.tag;
+  show('result');
+}
+$('go').onclick=()=>{i=0;scores=[];show('quiz');render();};
+$('again').onclick=()=>{i=0;scores=[];show('quiz');render();};
+$('copy').onclick=()=>{const r=window.__last;navigator.clipboard.writeText(`【薄肌指数】我是${r.name}（${r.code}）\\n${r.tag}\\n#薄肌指数`);alert('已复制');};
+</script>
+</body>
+</html>
