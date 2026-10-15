@@ -122,19 +122,6 @@ body{
       <h1 class="home-title">测试你的薄肌指数和分类</h1>
       <p class="home-sub">一题一题测完，给你一张有点损、但挺好玩的薄肌报表。</p>
       <p class="home-extra">题目全是更衣室、群聊、小红书、外卖夜和「今晚到底练不练」这种破事。选完会出四维十六分和一份长解读——适合截图发群，也适合半夜对自己诚实。</p>
-      <p class="home-extra muted">本测试只认你点的选项，不认你今天有没有练，也不认你朋友圈那张侧面光。</p>
-      <div class="chips">
-        <span class="chip">薄肌质量</span>
-        <span class="chip">AI使用率</span>
-        <span class="chip">孙学</span>
-        <span class="chip">黄毛</span>
-      </div>
-      <ul class="home-bullets">
-        <li>镜子前到底敢不敢硬刚</li>
-        <li>提示词和杠铃谁先到</li>
-        <li>「除了身体不行」浓度</li>
-        <li>先干再说，还是先观望</li>
-      </ul>
       <button class="btn" id="start" type="button">开始打分</button>
     </div>
   </section>
@@ -229,7 +216,7 @@ function resetAnswers(){
 function renderQ(){
   const t=DATA.questions[i];
   const d=dimById[t.dim];
-  $("qno").textContent = `第 ${i+1} / ${DATA.questions.length} 题 · ${d.name}`;
+  $("qno").textContent = `第 ${i+1} / ${DATA.questions.length} 题`;
   $("qtext").textContent = t.q;
   $("prog").style.width = ((i/DATA.questions.length)*100)+"%";
   $("opts").innerHTML="";
